@@ -33,10 +33,10 @@ def test_multiple_skus_with_bundles(skus, total):
     assert checkout_solution.checkout(skus) == total
 
 
-def test_freebie_value_is_added():
+def test_freebie_price_not_added():
     skus = "EE"
     # we should get vlaue of 2E and 1B because of the freebie
-    total = 40 * 2 + 30
+    total = 40 * 2
     assert checkout_solution.checkout(skus) == total
 
 
@@ -60,6 +60,7 @@ def test_freebie_counts_order_invariant(skus, total):
     be order-invariant
     """
     assert checkout_solution.checkout(skus) == total
+
 
 
 
