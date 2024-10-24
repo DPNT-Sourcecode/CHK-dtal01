@@ -1,3 +1,5 @@
+import re
+
 """
 +------+-------+------------------------+
 | Item | Price | Special offers         |
@@ -32,9 +34,23 @@
 """
 
 
-def parse_item():
-    pass
+def parse_item(line: str) -> dict:
+    item = {}
+    item_spec = r"(?P<item>[A-Z])\s*|" r"(?P<price>\d+)\s*|" r"(?P<offers>[A-Za-z])"
+
+    found = re.search(item_spec, line)
+    if not found:
+        raise ValueError("invalid item format")
+
+    item["item"] = found.group("item")
+    item["price"] = int(found.group("price"))
+
+    offers_str = found.group("offers")
+    offers = [o.strip() for o in offers_str.split(",")]
+
+    return item
 
 
 def load_items():
     pass
+
