@@ -1,6 +1,6 @@
 # noinspection PyUnusedLocal
 # skus = unicode string
-from collections import Counter
+from collections import Counter, OrderedDict
 
 PRICES: dict = {
     "A": 50,
@@ -9,8 +9,8 @@ PRICES: dict = {
     "D": 15,
 }
 BUNDLES = {
-    "A": {"qty": 3, "price": 130},
-    "B": {"qty": 2, "price": 45},
+    "A": {3: {"price": 130}, 5: {"price": 200}},
+    "B": {2: {"price": 45}},
 }
 
 
@@ -33,8 +33,11 @@ def get_item_price(item: str, count: int) -> int:
 
     # check if item is part of a bundle
     if item in BUNDLES:
-        bundle_size = BUNDLES[item]["qty"]
-        bundle_price = BUNDLES[item]["price"]
+        # sort bundles by their size, decreasing
+        # i.e. always try to fit largest bundles first
+        for qty, bundle in sorted(BUNDLES[item].items(), reverse=True):
+            bundle_size = bundle
+            bundle_price = bundle
 
         # get the number of bundles that can be made,
         # and the number of items that are left over
@@ -66,5 +69,6 @@ def checkout(skus: str) -> int:
         total += get_item_price(item, count)
 
     return total
+
 
 
