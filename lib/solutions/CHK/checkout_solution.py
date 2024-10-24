@@ -35,16 +35,17 @@ def extract_bundle(n, size: int) -> tuple[int, int]:
     return bundles, remaining
 
 
-def get_item_price(items: Counter, item: str) -> int:
+def get_bundles_price(cart: Counter, item: str) -> int:
     """
-    Given an item, return the price of that item
+    Given an item, return the total value of all found bundles
     :param items: Counter of items, passed by reference
     :param item: item to get the price for
     :return: price of the item
     """
     regular_price = PRICES[item]
-    n_items = items.pop(item)
-    total_price = 0
+    n_items = cart[item]
+
+    bundled_price = 0
 
     logger.debug(f"item: {item} x {n_items}")
 
@@ -55,6 +56,8 @@ def get_item_price(items: Counter, item: str) -> int:
     # i.e. always try to fit largest bundles first
     for bundle_size, bundle in sorted(offers.items(), reverse=True):
         bundles, n_items = extract_bundle(n_items, bundle_size)
+        # update remaining unbundled items in the cart
+        cart[item] = n_items
 
         if "price" in bundle:
             # bundle is for a discount,
@@ -68,22 +71,22 @@ def get_item_price(items: Counter, item: str) -> int:
 
             # we've got some item for free,
             # so add them to the counter
-            if freebie in items:
-                get_free = min(items[freebie], bundles)
+            if freebie in cart:
+                get_free = min(cart[freebie], bundles)
                 logger.debug(
                     f"got {get_free} {freebie} for free, from {bundles} bundles"
                 )
-                items.update({freebie: -get_free})
-                logger.debug(f"{freebie} count is now {items[freebie]}")
+                cart.update({freebie: -get_free})
+                logger.debug(f"{freebie} count is now {cart[freebie]}")
 
         # add the price for the bundles
-        total_price += bundles * bundle_price
+        bundled_price += bundles * bundle_price
         logger.debug(
             f"got {bundles} bundle(s) of size {bundle_size}, total price {bundles * bundle_price}"
         )
 
-    # add the price for the remaining items
-    return total_price
+    # returning the total value of all found bundles
+    return bundled_price
 
 
 def checkout(skus: str) -> int:
@@ -109,7 +112,8 @@ def checkout(skus: str) -> int:
             logger.error(f"invalid SKU: {item}")
             return -1
 
-        total += get_item_price(counts, item)
+        total += get_bundles_price(counts, item)
 
     return total
+
 
