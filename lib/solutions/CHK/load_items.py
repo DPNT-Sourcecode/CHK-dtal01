@@ -42,15 +42,26 @@ def parse_item(line: str) -> dict:
     if not found:
         raise ValueError("invalid item format")
 
+    # get basic item properties
     item["item"] = found.group("item")
     item["price"] = int(found.group("price"))
 
+    # extract separate offers from the string
     offers_str = found.group("offers")
     offers = [o.strip() for o in offers_str.split(",")]
+
+    item["offers"] = []
+    for offer in offers:
+        match offer.split():
+            case [n_item, "for", price]:
+                pass
+            case [n_item, "get", "one", "free"]:
+                pass
 
     return item
 
 
 def load_items():
     pass
+
 
