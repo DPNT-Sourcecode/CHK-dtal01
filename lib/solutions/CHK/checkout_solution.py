@@ -96,15 +96,19 @@ def checkout(skus: str) -> int:
     if not skus:
         return 0
 
-    items = get_items(skus)
-    counts = Counter(items)
+    counts = Counter(get_items(skus))
 
     total = 0
 
+    item_keys = counts.keys()
+    logger.info(item_keys)
+    logger.info([OFFERS.get(item, {}).get("freebie") is None for item in item_keys])
     items_by_offer = sorted(
-        items, key=lambda item: OFFERS.get(item, {}).get("freebies"), reverse=True
+        item_keys,
+        key=lambda item: OFFERS.get(item, {}).get("freebie") is None,
+        reverse=True,
     )
-    print(items_by_offer)
+    logger.info(items_by_offer)
     exit
     for item in counts:
         logger.info(f"finding bundles for {item}")
@@ -127,6 +131,7 @@ def checkout(skus: str) -> int:
         total += counts[item] * PRICES[item]
 
     return total
+
 
 
 
