@@ -13,9 +13,10 @@ for item in loader.load_items("items.txt"):
     PRICES.update({item["item"]: item["price"]})
     OFFERS.update({item["item"]: item["offers"]})
 
-for item, item_offers in OFFERS:
-    for offer in item_offers:
+for item, item_offers in OFFERS.items():
+    for key, offer in item_offers.items():
         # initialise purchase groups
+        logger.critical(offer)
         if "group" in offer:
             GROUPS[offer["group"]] = []
 
@@ -137,11 +138,21 @@ def checkout(skus: str) -> int:
     for group, items in found_groups:
         if not items:
             continue
+        required_size = GROUPS[group]["n"]
+        group_bundles, remaining = (
+            len(items) // required_size,
+            len(items) % required_size,
+        )
+        total += group_bundles * GROUPS[group]["price"]
+        # put remaining items back into the cart
+        for i in items[:remaining]:
+            counts[i] += 1
 
     for item in counts:
         total += counts[item] * PRICES[item]
 
     return total
+
 
 
 
