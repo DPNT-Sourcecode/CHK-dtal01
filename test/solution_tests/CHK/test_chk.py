@@ -40,8 +40,23 @@ def test_freebie_value_is_added():
     assert checkout_solution.checkout(skus) == total
 
 
-def test_freebie_counts_in_bundle():
-    skus = "EEB"
-    total = 40 * 2 + 45
+@pytest.mark.parametrize("skus,total", [("EEBB", 80 + 75)])
+def test_freebie_counts_in_bundle(skus, total):
+    """
+    Items received for free should be account for
+    in the total value. The calcualtion should
+    be order-invariant
+    """
     assert checkout_solution.checkout(skus) == total
+
+
+@pytest.mark.parametrize("skus,total", [("EEB", 80 + 45), ("BEE", 80 + 45)])
+def test_freebie_counts_order_invariant(skus, total):
+    """
+    Items received for free should be account for
+    in the total value. The calcualtion should
+    be order-invariant
+    """
+    assert checkout_solution.checkout(skus) == total
+
 
