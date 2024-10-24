@@ -6,13 +6,7 @@ from loguru import logger
 
 from . import loader
 
-# PRICES: dict = {"A": 50, "B": 30, "C": 20, "D": 15, "E": 40, "F": 10}
-# OFFERS = {
-#     "A": {3: {"price": 130}, 5: {"price": 200}},
-#     "B": {2: {"price": 45}},
-#     "E": {2: {"freebie": "B"}},
-#     "F": {3: {"price": 20}},
-# }
+
 PRICES, OFFERS = {}, {}
 
 for item in loader.load_items("items.txt"):
@@ -138,3 +132,4 @@ def checkout(skus: str) -> int:
         total += counts[item] * PRICES[item]
 
     return total
+
