@@ -25,14 +25,18 @@ def load_offers(offers: list[str], price) -> dict:
 def parse_item(line: str) -> dict:
     item = {}
     logger.info(f"parsing line: {line}")
-    item_spec = (
-        r"(?P<item>[A-Z]+)\s*\|\s*(?P<price>\d+)\s*\|\s*(?P<offers>[A-Za-z0-9 ]+)\s*|"
-    )
+    item_spec = r"(?P<item>[A-Z]+)"
 
-    found = re.search(item_spec, line)
-    if not found or not all(found.groups()):
-        logger.info(found.groups())
-        raise ValueError("invalid item format")
+    found = re.match(item_spec, line)
+
+    if found:
+        logger.warning(found.groups())
+
+    raise ValueError("e")
+
+    # if not found or not all(found.groups()):
+    #     logger.info(found.groups())
+    #     raise ValueError("invalid item format")
 
     # get basic item properties
     item["item"] = found.group("item")
@@ -52,5 +56,6 @@ def load_items(filepath: str):
         except ValueError as e:
             logger.debug(f'unable to parse line "{line}"')
             continue
+
 
 
