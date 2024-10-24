@@ -9,6 +9,9 @@ def load_offers(offers: list[str], price) -> dict:
 
     for offer in offers:
         match offer.split():
+            case ["buy", "any", n, "of", group, "for", price]:
+                pass
+
             case [n_item, "for", price]:
                 n = ""
                 for i, c in enumerate(n_item):
@@ -57,5 +60,6 @@ def load_items(filepath: str):
         except ValueError as e:
             # logger.debug(f'unable to parse line "{line.strip()}"')
             continue
+
 
 
