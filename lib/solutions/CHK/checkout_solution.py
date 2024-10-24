@@ -20,7 +20,7 @@ for item, item_offers in OFFERS.items():
         print(key, offer)
         # initialise purchase groups
         if "group" in offer:
-            GROUPS[offer["group"]] = []
+            GROUPS[offer["group"]["key"]] = []
 
 
 def get_items(skus: str) -> list[str]:
@@ -69,8 +69,10 @@ def apply_offers(cart: Counter, item: str, groups: dict[tuple, list]) -> int:
         # all items are going into the group
         if "group" in bundle:
             group = bundle["group"]
-            cart.pop(item, 0)
-            groups[group].extend([item] * cart[item])
+            cnt = cart.pop(item, 0)
+            print("group item in cart", item, cnt)
+            groups[group["key"]].extend([item] * cnt)
+            continue
 
         bundles, n_items = extract_bundle(n_items, bundle_size)
         # update remaining unbundled items in the cart
@@ -139,10 +141,11 @@ def checkout(skus: str) -> int:
     print(GROUPS)
     print(found_groups)
     # process groups
-    for group, items in found_groups:
+    for group, items in found_groups.items():
+        print(group, items)
         if not items:
             continue
-        required_size = GROUPS[group]["n"]
+        required_size = GROUPS[group["key"]]["n"]
         group_bundles, remaining = (
             len(items) // required_size,
             len(items) % required_size,
@@ -156,4 +159,5 @@ def checkout(skus: str) -> int:
         total += counts[item] * PRICES[item]
 
     return total
+
 
