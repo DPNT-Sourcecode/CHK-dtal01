@@ -147,11 +147,16 @@ def checkout(skus: str) -> int:
         print("found group ", key, items)
         if not items:
             continue
+
         required_size = GROUPS[key]["n"]
         group_bundles, remaining = (
             len(items) // required_size,
             len(items) % required_size,
         )
+
+        # sort items by price, so that remaining items are the cheapest
+        items = sorted(items, key=lambda x: PRICES[x])
+
         total += group_bundles * GROUPS[key]["price"]
         # put remaining items back into the cart
         for i in items[:remaining]:
@@ -161,6 +166,7 @@ def checkout(skus: str) -> int:
         total += counts[item] * PRICES[item]
 
     return total
+
 
 
 

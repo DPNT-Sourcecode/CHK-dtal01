@@ -87,5 +87,11 @@ def test_test(skus, total):
 
 
 def test_last():
-    assert checkout_solution.checkout("STX") == 45
+    assert checkout_solution.checkout("ZZZS") == 65
+    # assert checkout_solution.checkout("STXS") == 62
+
+
+# def test_last():
+# assert checkout_solution.checkout("ZZZS") == 45
+
 
