@@ -2,12 +2,7 @@
 # skus = unicode string
 from collections import Counter, OrderedDict
 
-PRICES: dict = {
-    "A": 50,
-    "B": 30,
-    "C": 20,
-    "D": 15,
-}
+PRICES: dict = {"A": 50, "B": 30, "C": 20, "D": 15, "E": 40}
 BUNDLES = {
     "A": {3: {"price": 130}, 5: {"price": 200}},
     "B": {2: {"price": 45}},
@@ -21,12 +16,6 @@ def get_items(skus: str) -> list[str]:
     """
 
     return list(skus)
-
-
-def get_bundled(item: str, count: int) -> int:
-    """
-    Given an item, return the price of that item
-    """
 
 
 def get_item_price(item: str, n_items: int) -> int:
@@ -52,6 +41,9 @@ def get_item_price(item: str, n_items: int) -> int:
 
             total_price += bundled * bundle_price
 
+    # add the price for the remaining items
+    return total_price + n_items * regular_price
+
 
 def checkout(skus: str) -> int:
     print(f"received '{skus}' SKU string from client")
@@ -70,6 +62,7 @@ def checkout(skus: str) -> int:
         total += get_item_price(item, count)
 
     return total
+
 
 
 

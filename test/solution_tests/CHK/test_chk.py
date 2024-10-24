@@ -10,7 +10,13 @@ def test_single_sku_total(skus, total):
 
 @pytest.mark.parametrize(
     "skus,total",
-    [("AAA", 130), ("AAAA", 130 + 50), ("A" * 6, 130 * 2), ("A" * 7, 130 * 2 + 50)],
+    [
+        ("AAA", 130),
+        ("AAAA", 130 + 50),
+        ("A" * 6, 200 + 50),
+        ("A" * 7, 200 + 50 * 2),
+        ("A" * 9, 200 + 130 + 50),
+    ],
 )
 def test_single_sku_bundles(skus, total):
     assert checkout_solution.checkout(skus) == total
@@ -25,3 +31,4 @@ def test_multiple_skus():
 )
 def test_multiple_skus_with_bundles(skus, total):
     assert checkout_solution.checkout(skus) == total
+
