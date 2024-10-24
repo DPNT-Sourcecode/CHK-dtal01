@@ -8,17 +8,15 @@ def load_offers(offers: list[str], price) -> dict:
     parsed_offers = {}
 
     for offer in offers:
-        # handle group offers
-
-            print(offer.split())
-            print(n, group)
-            group_items = group.strip("()").split(";")
-            print(group_items)
-            # proxy offer to add every single item to group
-            parsed_offers[1] = {"group": {"key": tuple(group_items), "n": n}}
-        continue
-
         match offer.split(" "):
+            case ["buy", "any", n, "of", group, "for", price]:
+                # handle group offers
+                print(offer.split())
+                print(n, group)
+                group_items = group.strip("()").split(";")
+                print(group_items)
+                # proxy offer to add every single item to group
+                parsed_offers[1] = {"group": {"key": tuple(group_items), "n": n}}
             case [n_item, "for", price]:
                 n = ""
                 print("n_item", n_item)
@@ -54,14 +52,11 @@ def parse_item(line: str) -> dict:
     item["item"] = found.group("item")
     item["price"] = int(found.group("price"))
 
-    offerst_str = found.group("offers")
-    offers = None
-    if 'buy any' in offerst_str:
-        offers = offerst_str.strip()
+    offers_str = found.group("offers")
+    if "buy any" in offers_str:
+        offers = offers_str.strip()
     else:
-        offers = [
-            o.strip() for o in offers_str.split(",") if not re.match(r"^\s*$", o)
-        ]
+        offers = [o.strip() for o in offers_str.split(",") if not re.match(r"^\s*$", o)]
 
     # extract separate offers from the string
     print(offers)
@@ -77,4 +72,5 @@ def load_items(filepath: str):
         except RuntimeError as e:
             logger.debug(f'unable to parse line "{line.strip()}": {e}')
             continue
+
 
