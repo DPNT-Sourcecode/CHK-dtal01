@@ -35,7 +35,7 @@ def extract_bundle(n, size: int) -> tuple[int, int]:
     return bundles, remaining
 
 
-def get_bundles_price(cart: Counter, item: str) -> int:
+def apply_offers(cart: Counter, item: str) -> int:
     """
     Given an item, return the total value of all found bundles
     :param items: Counter of items, passed by reference
@@ -101,10 +101,8 @@ def checkout(skus: str) -> int:
 
     total = 0
 
-    while top := counts.most_common(1):
-        item, _ = top[0]
-
-        logger.info(f"calculating price for {item}")
+    for item in counts:
+        logger.info(f"finding bundles for {item}")
         logger.info(
             f"remaining items: {', '.join([f'{k}, {c}' for k,c in counts.items()])}"
         )
@@ -112,8 +110,18 @@ def checkout(skus: str) -> int:
             logger.error(f"invalid SKU: {item}")
             return -1
 
-        total += get_bundles_price(counts, item)
+        if item in OFFERS:
+            logger.info(f"found offers for {item}")
+        total += apply_offers(counts, item)
+
+    for item in counts:
+        logger.info(f"finding bundles for {item}")
+        logger.info(
+            f"remaining items: {', '.join([f'{k}, {c}' for k,c in counts.items()])}"
+        )
+        total += counts[item] * PRICES[item]
 
     return total
+
 
 
