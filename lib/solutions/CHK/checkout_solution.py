@@ -19,6 +19,7 @@ def get_items(skus: str) -> list[str]:
     Given a stirng representation of the checked out items,
     return a list of individual items
     """
+
     return list(skus)
 
 
@@ -46,8 +47,10 @@ def get_item_price(item: str, count: int) -> int:
 
 
 def checkout(skus: str) -> int:
-    items = get_items(skus)
+    if not skus:
+        return -1
 
+    items = get_items(skus)
     counts = Counter(items)
 
     total = 0
@@ -58,6 +61,7 @@ def checkout(skus: str) -> int:
         total += get_item_price(item, count)
 
     return total
+
 
 
 
