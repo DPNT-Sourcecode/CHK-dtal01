@@ -1,6 +1,6 @@
 # noinspection PyUnusedLocal
 # skus = unicode string
-from collections import Counter
+from collections import Counter, defaultdict
 
 from loguru import logger
 
@@ -67,7 +67,7 @@ def apply_offers(cart: Counter, item: str, groups: dict[tuple, list]) -> int:
         if "group" in bundle:
             group = bundle["group"]
             cart.pop(item, 0)
-            GROUPS[group].extend([item] * cart[item])
+            groups[group].extend([item] * cart[item])
 
         bundles, n_items = extract_bundle(n_items, bundle_size)
         # update remaining unbundled items in the cart
@@ -111,7 +111,7 @@ def checkout(skus: str) -> int:
         return 0
 
     counts = Counter(get_items(skus))
-    found_groups = {}
+    found_groups: dict[tuple, list] = defaultdict(list)
 
     total = 0
 
@@ -134,12 +134,14 @@ def checkout(skus: str) -> int:
         total += apply_offers(counts, item, found_groups)
 
     # process groups
-    for group in found_groups:
-
+    for group, items in found_groups:
+        if not items:
+            continue
 
     for item in counts:
         total += counts[item] * PRICES[item]
 
     return total
+
 
 
