@@ -101,11 +101,14 @@ def checkout(skus: str) -> int:
     total = 0
 
     item_keys = counts.keys()
-    logger.info(item_keys)
-    logger.info([OFFERS.get(item, {}).get("freebie") is None for item in item_keys])
+    # logger.info(item_keys)
+    # logger.info([OFFERS.get(item, {}).get("freebie") is None for item in item_keys])
+    logger.info(OFFERS.get("E", {}))
+    logger.info([v for _, v in OFFERS.get("E", {})])
+    logger.info(["freebie" in v for _, v in OFFERS.get("E", {})])
     items_by_offer = sorted(
         item_keys,
-        key=lambda item: OFFERS.get(item, {}).get("freebie") is None,
+        key=lambda item: any(["freebie" in v for _, v in OFFERS.get(item, {})]),
         reverse=True,
     )
     logger.info(items_by_offer)
@@ -131,6 +134,7 @@ def checkout(skus: str) -> int:
         total += counts[item] * PRICES[item]
 
     return total
+
 
 
 
