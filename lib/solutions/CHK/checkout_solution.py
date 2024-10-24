@@ -1,11 +1,12 @@
 # noinspection PyUnusedLocal
 # skus = unicode string
-from collections import Counter, OrderedDict
+from collections import Counter
 
 PRICES: dict = {"A": 50, "B": 30, "C": 20, "D": 15, "E": 40}
-BUNDLES = {
+OFFERS = {
     "A": {3: {"price": 130}, 5: {"price": 200}},
     "B": {2: {"price": 45}},
+    "E": {2: {"freebie": "B"}},
 }
 
 
@@ -18,19 +19,24 @@ def get_items(skus: str) -> list[str]:
     return list(skus)
 
 
-def get_item_price(item: str, n_items: int) -> int:
+def get_item_price(items: Counter, item: str) -> int:
     """
     Given an item, return the price of that item
+    :param items: Counter of items, passed by reference
+    :param item: item to get the price for
+    :return: price of the item
     """
     regular_price = PRICES[item]
+    n_items = items[item]
     total_price = 0
 
     # check if item is part of a bundle
-    if item in BUNDLES:
+    if item in OFFERS:
         # sort bundles by their size, decreasing
         # i.e. always try to fit largest bundles first
-        for bundle_size, bundle in sorted(BUNDLES[item].items(), reverse=True):
-            bundle_price = bundle["price"]
+        for bundle_size, bundle in sorted(OFFERS[item].items(), reverse=True):
+            if "price" in bundle:
+                bundle_price = bundle["price"]
 
             # get the price for the current bundle
             # and update the number of items remaining
@@ -62,6 +68,7 @@ def checkout(skus: str) -> int:
         total += get_item_price(item, count)
 
     return total
+
 
 
 
