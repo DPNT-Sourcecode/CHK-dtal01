@@ -74,4 +74,3 @@ def test_n_plus_freebie_subtracted(skus, total):
     be order-invariant
     """
     assert checkout_solution.checkout(skus) == total
-

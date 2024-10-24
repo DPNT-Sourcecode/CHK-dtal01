@@ -1,5 +1,5 @@
 import re
-
+import pathlib
 
 from loguru import logger
 
@@ -24,11 +24,15 @@ def load_offers(offers: list[str]) -> dict:
 
 def parse_item(line: str) -> dict:
     item = {}
-    item_spec = r"(?P<item>[A-Z])\s*|" r"(?P<price>\d+)\s*|" r"(?P<offers>[A-Za-z])"
+    item_spec = r"(?P<item>[A-Z])\s*|\s*(?P<price>\d+)\s*|\s*(?P<offers>[A-Za-z])"
 
     found = re.search(item_spec, line)
     if not found:
         raise ValueError("invalid item format")
+
+    from pprint import pprint
+
+    pprint(found.groups())
 
     # get basic item properties
     item["item"] = found.group("item")
@@ -42,10 +46,9 @@ def parse_item(line: str) -> dict:
 
 
 def load_items(filepath: str):
-    for line in open(filepath):
+    for line in open(pathlib.Path(__file__).parent.resolve() / filepath):
         try:
             yield parse_item(line)
         except ValueError as e:
             logger.debug(f'unable to parse line "{line}"')
             continue
-

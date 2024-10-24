@@ -4,7 +4,7 @@ from collections import Counter
 
 from loguru import logger
 
-import loader
+from . import loader
 
 # PRICES: dict = {"A": 50, "B": 30, "C": 20, "D": 15, "E": 40, "F": 10}
 # OFFERS = {
@@ -138,5 +138,3 @@ def checkout(skus: str) -> int:
         total += counts[item] * PRICES[item]
 
     return total
-
-
