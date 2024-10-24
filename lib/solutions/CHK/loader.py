@@ -16,9 +16,8 @@ def load_offers(offers: list[str], price) -> dict:
             case [n_item, "get", "one", target, "free"]:
                 n, sku = n_item[0], n_item[1:]
                 if target == sku:
-                    logger.info(f"found freebie {sku} in {offer}, {n_item}")
-                    logger.info(f"hence offer for {int(n)} {sku} is {price * int(n)}")
-                    parsed_offers[int(n)] = {"price": price * int(n)}
+                    # buy N get 1 free is effectively price of N-1 items
+                    parsed_offers[int(n)] = {"price": price * (int(n))}
                 else:
                     parsed_offers[int(n)] = {"freebie": target}
     return parsed_offers
@@ -57,6 +56,7 @@ def load_items(filepath: str):
         except ValueError as e:
             logger.debug(f'unable to parse line "{line.strip()}"')
             continue
+
 
 
 
