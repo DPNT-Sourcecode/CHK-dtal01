@@ -25,13 +25,17 @@ def load_offers(offers: list[str], price) -> dict:
 def parse_item(line: str) -> dict:
     item = {}
     logger.info(f"parsing line: {line}")
-    item_spec = r"(?P<item>[A-Z]+)"
+    item_spec = (
+        r"(?P<item>[A-Z]+)\s*\|\s*(?P<price>\d+)\s*\|\s*(?P<offers>[A-Za-z0-9 ]+)"
+    )
 
-    found = re.match(item_spec, line)
+    found = re.search(item_spec, line.strip())
+    logger.warning(found)
 
     if found:
         logger.warning(found.groups())
 
+    exit()
     raise ValueError("e")
 
     # if not found or not all(found.groups()):
@@ -52,10 +56,11 @@ def parse_item(line: str) -> dict:
 def load_items(filepath: str):
     for line in open(pathlib.Path(__file__).parent.resolve() / filepath):
         try:
-            yield parse_item(line)
+            yield parse_item(line.strip())
         except ValueError as e:
-            logger.debug(f'unable to parse line "{line}"')
+            logger.debug(f'unable to parse line "{line.strip()}"')
             continue
+
 
 
 
