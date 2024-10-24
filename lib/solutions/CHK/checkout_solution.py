@@ -10,6 +10,7 @@ from . import loader
 PRICES, OFFERS = {}, {}
 
 for item in loader.load_items("items.txt"):
+    print(item["price"])
     PRICES.update({item["item"]: item["price"]})
     OFFERS.update({item["item"]: item["offers"]})
 
@@ -63,10 +64,12 @@ def apply_offers(cart: Counter, item: str) -> int:
         # update remaining unbundled items in the cart
         cart[item] = n_items
 
+        if not bundles:
+            continue
+
         if "price" in bundle:
             # bundle is for a discount,
             # hence use the special price
-            print(bundle_size, bundle)
             bundle_price = bundle["price"]
         elif "freebie" in bundle:
             # we get a freebie, hence bundle size
@@ -86,9 +89,6 @@ def apply_offers(cart: Counter, item: str) -> int:
 
         # add the price for the bundles
         bundled_price += bundles * bundle_price
-        logger.debug(
-            f"got {bundles} bundle(s) of size {bundle_size}, total price {bundles * bundle_price}"
-        )
 
     # returning the total value of all found bundles
     return bundled_price
@@ -121,8 +121,6 @@ def checkout(skus: str) -> int:
             logger.error(f"invalid SKU: {item}")
             return -1
 
-        if item in OFFERS:
-            logger.info(f"found offers for {item}")
         total += apply_offers(counts, item)
 
     for item in counts:
@@ -130,6 +128,8 @@ def checkout(skus: str) -> int:
         logger.info(
             f"remaining items: {', '.join([f'{k}, {c}' for k,c in counts.items()])}"
         )
+        logger.debug(f"{counts[item]=}", {PRICES[item]})
         total += counts[item] * PRICES[item]
 
     return total
+
