@@ -31,3 +31,17 @@ def test_multiple_skus():
 )
 def test_multiple_skus_with_bundles(skus, total):
     assert checkout_solution.checkout(skus) == total
+
+
+def test_freebie_value_is_added():
+    skus = "EE"
+    # we should get vlaue of 2E and 1B because of the freebie
+    total = 40 * 2 + 30
+    assert checkout_solution.checkout(skus) == total
+
+
+def test_freebie_counts_in_bundle():
+    skus = "EEB"
+    total = 40 * 2 + 45
+    assert checkout_solution.checkout(skus) == total
+

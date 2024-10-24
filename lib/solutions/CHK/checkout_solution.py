@@ -84,16 +84,16 @@ def checkout(skus: str) -> int:
     total = 0
 
     while top := counts.most_common(1):
-        item, count = top
-        print(f"most common: {item}")
+        item, _ = top[0]
 
         if item not in PRICES:
             print(f"invalid SKU: {item}")
             return -1
 
-        total += get_item_price(item, count)
+        total += get_item_price(counts, item)
 
     return total
+
 
 
 
