@@ -17,7 +17,7 @@ def load_offers(offers: list[str], price) -> dict:
                 n, sku = n_item[0], n_item[1:]
                 if target == sku:
                     # buy N get 1 free is effectively price of N-1 items
-                    parsed_offers[int(n)] = {"price": price * (int(n))}
+                    parsed_offers[int(n) + 1] = {"price": price * (int(n))}
                 else:
                     parsed_offers[int(n)] = {"freebie": target}
     return parsed_offers
@@ -56,6 +56,7 @@ def load_items(filepath: str):
         except ValueError as e:
             logger.debug(f'unable to parse line "{line.strip()}"')
             continue
+
 
 
 

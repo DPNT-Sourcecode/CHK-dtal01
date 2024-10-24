@@ -66,6 +66,7 @@ def apply_offers(cart: Counter, item: str) -> int:
         if "price" in bundle:
             # bundle is for a discount,
             # hence use the special price
+            print(bundle_size, bundle)
             bundle_price = bundle["price"]
         elif "freebie" in bundle:
             # we get a freebie, hence bundle size
@@ -132,4 +133,5 @@ def checkout(skus: str) -> int:
         total += counts[item] * PRICES[item]
 
     return total
+
 
