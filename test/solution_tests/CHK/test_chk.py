@@ -41,7 +41,7 @@ def test_freebie_price_not_added():
 
 
 @pytest.mark.parametrize(
-    "skus,total", [("EEBB", 80 + 30), ("EEEEBBB", 160 + 30), ("EEBBB", 160 + 45)]
+    "skus,total", [("EEBB", 80 + 30), ("EEEEBBB", 160 + 30), ("EEBBB", 80 + 45)]
 )
 def test_freebie_counts_in_bundle(skus, total):
     """
@@ -60,6 +60,7 @@ def test_freebie_counts_order_invariant(skus, total):
     be order-invariant
     """
     assert checkout_solution.checkout(skus) == total
+
 
 
 
