@@ -63,7 +63,9 @@ def get_item_price(items: Counter, item: str) -> int:
 
                 # we've got some item for free,
                 # so add them to the counter
-                items.update({freebie: bundles})
+                if freebie in items:
+                    get_free = max(items[freebie], bundles)
+                    items.update({freebie: -get_free})
 
             # add the price for the bundles
             total_price += bundles * bundle_price
@@ -93,6 +95,7 @@ def checkout(skus: str) -> int:
         total += get_item_price(counts, item)
 
     return total
+
 
 
 
