@@ -37,7 +37,7 @@ def extract_bundle(n, size: int) -> tuple[int, int]:
     return bundles, remaining
 
 
-def apply_offers(cart: Counter, item: str) -> int:
+def apply_offers(cart: Counter, item: str, groups: dict[tuple, list]) -> int:
     """
     Given an item, return the total value of all found bundles
     :param items: Counter of items, passed by reference
@@ -64,7 +64,9 @@ def apply_offers(cart: Counter, item: str) -> int:
         if not bundles:
             continue
 
-        if "price" in bundle:
+        if "gorup" in bundle:
+
+        elif "price" in bundle:
             # bundle is for a discount,
             # hence use the special price
             bundle_price = bundle["price"]
@@ -124,5 +126,3 @@ def checkout(skus: str) -> int:
         total += counts[item] * PRICES[item]
 
     return total
-
-

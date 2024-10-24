@@ -11,7 +11,7 @@ def load_offers(offers: list[str], price) -> dict:
         match offer.split():
             case ["buy", "any", n, "of", group, "for", price]:
                 # proxy offer to add every single item to group
-                parsed_offers[1] = {"group": group}
+                parsed_offers[1] = {"group": tuple(group.strip("()").split(","))}
 
             case [n_item, "for", price]:
                 n = ""
@@ -61,7 +61,3 @@ def load_items(filepath: str):
         except ValueError as e:
             # logger.debug(f'unable to parse line "{line.strip()}"')
             continue
-
-
-
-
