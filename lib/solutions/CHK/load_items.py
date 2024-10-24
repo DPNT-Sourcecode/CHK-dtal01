@@ -50,18 +50,25 @@ def parse_item(line: str) -> dict:
     offers_str = found.group("offers")
     offers = [o.strip() for o in offers_str.split(",")]
 
-    item["offers"] = []
+    parsed_offers = {}
     for offer in offers:
         match offer.split():
             case [n_item, "for", price]:
-                pass
-            case [n_item, "get", "one", "free"]:
-                pass
+                n = n_item[0]  # assuming format [N]item
+                parsed_offers[int(n)] = {"price": int(price)}
+
+            case [n_item, "get", "one", target, "free"]:
+                n, item = n_item[0], n_item[1:]
+                if target == item:
+                    parsed_offers[int(n)] = {"price": item["price"] * int(n)}
+
+    item["offers"] = parsed_offers
 
     return item
 
 
 def load_items():
     pass
+
 
 
