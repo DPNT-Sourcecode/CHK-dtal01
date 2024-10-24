@@ -13,7 +13,13 @@ def load_offers(offers: list[str], price) -> dict:
                 # handle group offers
                 group_items = group.strip("()").split(";")
                 # proxy offer to add every single item to group
-                parsed_offers[1] = {"group": {"key": tuple(group_items), "n": n}}
+                parsed_offers[1] = {
+                    "group": {
+                        "key": tuple(group_items),
+                        "n": int(n),
+                        "price": int(price),
+                    }
+                }
             case [n_item, "for", price]:
                 n = ""
                 for i, c in enumerate(n_item):
@@ -65,6 +71,7 @@ def load_items(filepath: str):
         except RuntimeError as e:
             # logger.debug(f'unable to parse line "{line.strip()}": {e}')
             continue
+
 
 
 

@@ -20,7 +20,10 @@ for item, item_offers in OFFERS.items():
         print(key, offer)
         # initialise purchase groups
         if "group" in offer:
-            GROUPS[offer["group"]["key"]] = []
+            GROUPS[offer["group"]["key"]] = {
+                "n": offer["group"]["n"],
+                "price": offer["group"]["price"],
+            }
 
 
 def get_items(skus: str) -> list[str]:
@@ -138,19 +141,18 @@ def checkout(skus: str) -> int:
 
         total += apply_offers(counts, item, found_groups)
 
-    print(GROUPS)
-    print(found_groups)
+    print("all groups", GROUPS)
     # process groups
-    for group, items in found_groups.items():
-        print(group, items)
+    for key, items in found_groups.items():
+        print("found group ", key, items)
         if not items:
             continue
-        required_size = GROUPS[group["key"]]["n"]
+        required_size = GROUPS[key]["n"]
         group_bundles, remaining = (
             len(items) // required_size,
             len(items) % required_size,
         )
-        total += group_bundles * GROUPS[group]["price"]
+        total += group_bundles * GROUPS[key]["price"]
         # put remaining items back into the cart
         for i in items[:remaining]:
             counts[i] += 1
@@ -159,5 +161,6 @@ def checkout(skus: str) -> int:
         total += counts[item] * PRICES[item]
 
     return total
+
 
 
