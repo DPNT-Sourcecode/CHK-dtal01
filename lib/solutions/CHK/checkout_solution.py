@@ -101,6 +101,11 @@ def checkout(skus: str) -> int:
 
     total = 0
 
+    items_by_offer = sorted(
+        items, key=lambda item: OFFERS.get(item, {}).get("freebies"), reverse=True
+    )
+    print(items_by_offer)
+    exit
     for item in counts:
         logger.info(f"finding bundles for {item}")
         logger.info(
@@ -122,6 +127,7 @@ def checkout(skus: str) -> int:
         total += counts[item] * PRICES[item]
 
     return total
+
 
 
 
