@@ -63,9 +63,11 @@ def apply_offers(cart: Counter, item: str, groups: dict[tuple, list]) -> int:
     # sort bundles by their size, decreasing
     # i.e. always try to fit largest bundles first
     for bundle_size, bundle in sorted(offers.items(), reverse=True):
+        # all items are going into the group
         if "group" in bundle:
             group = bundle["group"]
-            GROUPS[group].append()
+            cart.pop(item, 0)
+            GROUPS[group].extend([item] * cart[item])
 
         bundles, n_items = extract_bundle(n_items, bundle_size)
         # update remaining unbundled items in the cart
@@ -109,6 +111,7 @@ def checkout(skus: str) -> int:
         return 0
 
     counts = Counter(get_items(skus))
+    found_groups = {}
 
     total = 0
 
@@ -128,10 +131,15 @@ def checkout(skus: str) -> int:
             logger.error(f"invalid SKU: {item}")
             return -1
 
-        total += apply_offers(counts, item)
+        total += apply_offers(counts, item, found_groups)
+
+    # process groups
+    for group in found_groups:
+
 
     for item in counts:
         total += counts[item] * PRICES[item]
 
     return total
+
 
