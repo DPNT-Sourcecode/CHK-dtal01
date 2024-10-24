@@ -50,7 +50,10 @@ def parse_item(line: str) -> dict:
     item["price"] = int(found.group("price"))
 
     # extract separate offers from the string
-    offers = [o.strip() for o in found.group("offers").split(",")]
+    offers = [
+        o.strip() for o in found.group("offers").split(",") if not re.match(r"^\s*$", o)
+    ]
+    print(offers)
     item["offers"] = load_offers(offers, item["price"])
 
     return item
@@ -63,6 +66,7 @@ def load_items(filepath: str):
         except RuntimeError as e:
             logger.debug(f'unable to parse line "{line.strip()}": {e}')
             continue
+
 
 
 
