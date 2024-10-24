@@ -41,7 +41,7 @@ def get_item_price(items: Counter, item: str) -> int:
     :return: price of the item
     """
     regular_price = PRICES[item]
-    n_items = items[item]
+    n_items = items.pop(item)
     total_price = 0
 
     # check if item is part of a bundle
@@ -82,11 +82,17 @@ def checkout(skus: str) -> int:
     counts = Counter(items)
 
     total = 0
-    for item, count in counts.items():
+
+    while counts:
+        print(counts)
+        item = counts.most_common(1)
+        print(f"most common: {item}")
+
         if item not in PRICES:
             return -1
 
         total += get_item_price(item, count)
 
     return total
+
 
