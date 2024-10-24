@@ -63,3 +63,14 @@ def test_freebie_counts_order_invariant(skus, total):
     """
     assert checkout_solution.checkout(skus) == total
 
+
+@pytest.mark.parametrize(
+    "skus,total", [("FF", 20), ("FFF", 20), ("FFFF", 20 + 10), ("FFFFF", 20 + 10 + 5)]
+)
+def test_n_plus_freebie_discount(skus, total):
+    """
+    Items received for free should be account for
+    in the total value. The calcualtion should
+    be order-invariant
+    """
+    assert checkout_solution.checkout(skus) == total

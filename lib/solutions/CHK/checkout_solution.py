@@ -4,11 +4,12 @@ from collections import Counter
 
 from loguru import logger
 
-PRICES: dict = {"A": 50, "B": 30, "C": 20, "D": 15, "E": 40}
+PRICES: dict = {"A": 50, "B": 30, "C": 20, "D": 15, "E": 40, "F": 10}
 OFFERS = {
     "A": {3: {"price": 130}, 5: {"price": 200}},
     "B": {2: {"price": 45}},
     "E": {2: {"freebie": "B"}},
+    "F": {3: {"freebie": "F"}},
 }
 
 
@@ -128,10 +129,3 @@ def checkout(skus: str) -> int:
         total += counts[item] * PRICES[item]
 
     return total
-
-
-
-
-
-
-
