@@ -100,20 +100,14 @@ def checkout(skus: str) -> int:
 
     total = 0
 
-    item_keys = counts.keys()
-    # logger.info(item_keys)
-    # logger.info([OFFERS.get(item, {}).get("freebie") is None for item in item_keys])
-    logger.info(OFFERS.get("E", {}))
-    logger.info([v for _, v in OFFERS.get("E", {})])
-    logger.info(["freebie" in v for _, v in OFFERS.get("E", {})])
+    # sort items with freebie offers first
     items_by_offer = sorted(
-        item_keys,
-        key=lambda item: any(["freebie" in v for _, v in OFFERS.get(item, {})]),
+        counts.keys(),
+        key=lambda item: any(["freebie" in v for v in OFFERS.get(item, {}).values()]),
         reverse=True,
     )
-    logger.info(items_by_offer)
-    exit
-    for item in counts:
+
+    for item in items_by_offer:
         logger.info(f"finding bundles for {item}")
         logger.info(
             f"remaining items: {', '.join([f'{k}, {c}' for k,c in counts.items()])}"
@@ -134,6 +128,7 @@ def checkout(skus: str) -> int:
         total += counts[item] * PRICES[item]
 
     return total
+
 
 
 
