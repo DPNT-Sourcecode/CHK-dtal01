@@ -8,7 +8,7 @@ def load_offers(offers: list[str], price) -> dict:
     parsed_offers = {}
 
     for offer in offers:
-        match offer.split():
+        match offer.split(" "):
             case ["buy", "any", n, "of", group, "for", price]:
                 print(n, group)
                 group_items = group.strip("()").split(",")
@@ -18,7 +18,9 @@ def load_offers(offers: list[str], price) -> dict:
 
             case [n_item, "for", price]:
                 n = ""
+                print("n_item", n_item)
                 for i, c in enumerate(n_item):
+                    print(c, c.isnumeric())
                     if not c.isnumeric():
                         break
                     n += c
@@ -66,6 +68,7 @@ def load_items(filepath: str):
         except RuntimeError as e:
             logger.debug(f'unable to parse line "{line.strip()}": {e}')
             continue
+
 
 
 
