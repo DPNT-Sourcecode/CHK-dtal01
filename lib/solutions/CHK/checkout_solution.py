@@ -1,6 +1,7 @@
 # noinspection PyUnusedLocal
 # skus = unicode string
 from collections import Counter, defaultdict
+from pprint import pprint
 
 from loguru import logger
 
@@ -13,10 +14,11 @@ for item in loader.load_items("items.txt"):
     PRICES.update({item["item"]: item["price"]})
     OFFERS.update({item["item"]: item["offers"]})
 
+pprint(PRICES)
+
 for item, item_offers in OFFERS.items():
     for key, offer in item_offers.items():
         # initialise purchase groups
-        logger.critical(offer)
         if "group" in offer:
             GROUPS[offer["group"]] = []
 
@@ -152,6 +154,7 @@ def checkout(skus: str) -> int:
         total += counts[item] * PRICES[item]
 
     return total
+
 
 
 
