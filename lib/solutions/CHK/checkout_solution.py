@@ -7,11 +7,17 @@ from loguru import logger
 from . import loader
 
 
-PRICES, OFFERS = {}, {}
+PRICES, OFFERS, GROUPS = {}, {}, {}
 
 for item in loader.load_items("items.txt"):
     PRICES.update({item["item"]: item["price"]})
     OFFERS.update({item["item"]: item["offers"]})
+
+for item, item_offers in OFFERS:
+    for offer in item_offers:
+        # initialise purchase groups
+        if "group" in offer:
+            GROUPS[offer["group"]] = []
 
 
 def get_items(skus: str) -> list[str]:
@@ -57,6 +63,10 @@ def apply_offers(cart: Counter, item: str, groups: dict[tuple, list]) -> int:
     # sort bundles by their size, decreasing
     # i.e. always try to fit largest bundles first
     for bundle_size, bundle in sorted(offers.items(), reverse=True):
+        if "group" in bundle:
+            group = bundle["group"]
+            GROUPS[group].append()
+
         bundles, n_items = extract_bundle(n_items, bundle_size)
         # update remaining unbundled items in the cart
         cart[item] = n_items
@@ -64,9 +74,7 @@ def apply_offers(cart: Counter, item: str, groups: dict[tuple, list]) -> int:
         if not bundles:
             continue
 
-        if "gorup" in bundle:
-
-        elif "price" in bundle:
+        if "price" in bundle:
             # bundle is for a discount,
             # hence use the special price
             bundle_price = bundle["price"]
@@ -126,3 +134,4 @@ def checkout(skus: str) -> int:
         total += counts[item] * PRICES[item]
 
     return total
+
