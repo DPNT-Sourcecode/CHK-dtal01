@@ -10,7 +10,21 @@ PRICES: dict = {
 }
 
 
-def checkout(skus: str) -> int:
+def get_items(skus: str) -> list[str]:
+    """
+    Given a stirng representation of the checked out items,
+    return a list of individual items
+    """
+    return list(skus)
 
-    items = skus.split()
+
+def checkout(skus: str) -> int:
+    items = get_items(skus)
+
+    counts = Counter(items)
+
+    for item, count in counts.items():
+        if item not in PRICES:
+            return -1
+
 
