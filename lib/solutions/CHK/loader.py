@@ -10,7 +10,9 @@ def load_offers(offers: list[str], price) -> dict:
     for offer in offers:
         match offer.split():
             case ["buy", "any", n, "of", group, "for", price]:
+                print(n, group)
                 group_items = group.strip("()").split(",")
+                print(group_items)
                 # proxy offer to add every single item to group
                 parsed_offers[1] = {"group": {"key": tuple(group_items), "n": n}}
 
@@ -40,7 +42,8 @@ def parse_item(line: str) -> dict:
     found = re.search(item_spec, line.strip())
 
     if not found or not all(found.groups()):
-        raise ValueError("invalid item format")
+        raise RuntimeError("invalid item format")
+    print(found.groups())
 
     # get basic item properties
     item["item"] = found.group("item")
@@ -57,8 +60,9 @@ def load_items(filepath: str):
     for line in open(pathlib.Path(__file__).parent.resolve() / filepath):
         try:
             yield parse_item(line.strip())
-        except ValueError as e:
-            logger.debug(f'unable to parse line "{line.strip()}"')
+        except RuntimeError as e:
+            logger.debug(f'unable to parse line "{line.strip()}": {e}')
             continue
+
 
 
