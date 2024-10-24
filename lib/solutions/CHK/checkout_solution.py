@@ -14,10 +14,10 @@ for item in loader.load_items("items.txt"):
     PRICES.update({item["item"]: item["price"]})
     OFFERS.update({item["item"]: item["offers"]})
 
-pprint(PRICES)
 
 for item, item_offers in OFFERS.items():
     for key, offer in item_offers.items():
+        print(key, offer)
         # initialise purchase groups
         if "group" in offer:
             GROUPS[offer["group"]] = []
@@ -136,6 +136,8 @@ def checkout(skus: str) -> int:
 
         total += apply_offers(counts, item, found_groups)
 
+    print(GROUPS)
+    print(found_groups)
     # process groups
     for group, items in found_groups:
         if not items:
@@ -154,3 +156,4 @@ def checkout(skus: str) -> int:
         total += counts[item] * PRICES[item]
 
     return total
+

@@ -84,3 +84,8 @@ def test_loaded(skus, total):
 @pytest.mark.parametrize("skus,total", [("S", 20)])
 def test_test(skus, total):
     assert checkout_solution.checkout(skus) == total
+
+
+def test_last():
+    assert checkout_solution.checkout("STX") == 45
+
