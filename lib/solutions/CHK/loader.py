@@ -26,16 +26,13 @@ def parse_item(line: str) -> dict:
     item = {}
     logger.info(f"parsing line: {line}")
     item_spec = (
-        r"(?P<item>[A-Z]+){1}\s*\|\s*(?P<price>\d+){1}\s*\|\s*(?P<offers>[A-Za-z]+)"
+        r"(?P<item>[A-Z]+)\s*\|\s*(?P<price>\d+)\s*\|\s*(?P<offers>[A-Za-z0-9 ]+)\s*|"
     )
 
     found = re.search(item_spec, line)
-    if not found:
+    if not found or not all(found.groups()):
+        logger.info(found.groups())
         raise ValueError("invalid item format")
-
-    from pprint import pprint
-
-    pprint(found.groups())
 
     # get basic item properties
     item["item"] = found.group("item")
@@ -55,4 +52,5 @@ def load_items(filepath: str):
         except ValueError as e:
             logger.debug(f'unable to parse line "{line}"')
             continue
+
 
