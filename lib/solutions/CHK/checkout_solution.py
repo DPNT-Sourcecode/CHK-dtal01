@@ -9,7 +9,7 @@ OFFERS = {
     "A": {3: {"price": 130}, 5: {"price": 200}},
     "B": {2: {"price": 45}},
     "E": {2: {"freebie": "B"}},
-    "F": {3: {"freebie": "F"}},
+    "F": {3: {"price": 20}},
 }
 
 
@@ -129,3 +129,4 @@ def checkout(skus: str) -> int:
         total += counts[item] * PRICES[item]
 
     return total
+
