@@ -49,15 +49,23 @@ def get_item_price(items: Counter, item: str) -> int:
         # sort bundles by their size, decreasing
         # i.e. always try to fit largest bundles first
         for bundle_size, bundle in sorted(OFFERS[item].items(), reverse=True):
-            bundles, remaining = extract_bundle(n_items, bundle_size)
+            bundles, n_items = extract_bundle(n_items, bundle_size)
 
             if "price" in bundle:
+                # bundle is for a discount,
+                # hence use the special price
                 bundle_price = bundle["price"]
             elif "freebie" in bundle:
                 # we get a freebie, hence bundle size
                 # is just the price of all items within
                 bundle_price = bundle_size * regular_price
+                freebie = bundle["freebie"]
 
+                # we've got some item for free,
+                # so add them to the counter
+                items.update({freebie: bundles})
+
+            # add the price for the bundles
             total_price += bundles * bundle_price
 
     # add the price for the remaining items
@@ -81,3 +89,4 @@ def checkout(skus: str) -> int:
         total += get_item_price(item, count)
 
     return total
+
