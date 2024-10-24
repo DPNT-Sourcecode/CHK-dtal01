@@ -1,6 +1,9 @@
 import re
 
 
+from loguru import logger
+
+
 def load_offers(offers: list[str]) -> dict:
     parsed_offers = {}
 
@@ -25,7 +28,7 @@ def parse_item(line: str) -> dict:
 
     found = re.search(item_spec, line)
     if not found:
-        return
+        raise ValueError("invalid item format")
 
     # get basic item properties
     item["item"] = found.group("item")
@@ -38,6 +41,11 @@ def parse_item(line: str) -> dict:
     return item
 
 
-def load_items():
-    for line in open("items.txt"):
-        yield parse_item(line)
+def load_items(filepath: str):
+    for line in open(filepath):
+        try:
+            yield parse_item(line)
+        except ValueError as e:
+            logger.debug(f'unable to parse line "{line}"')
+            continue
+
