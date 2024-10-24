@@ -50,7 +50,7 @@ def get_item_price(item: str, count: int) -> int:
 
 
 def checkout(skus: str) -> int:
-    print(f"received {skus}")
+    print(f"received '{skus}' SKU string from client")
 
     if not skus:
         return -1
@@ -66,3 +66,4 @@ def checkout(skus: str) -> int:
         total += get_item_price(item, count)
 
     return total
+
