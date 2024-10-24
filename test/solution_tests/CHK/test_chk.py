@@ -31,4 +31,3 @@ def test_multiple_skus():
 )
 def test_multiple_skus_with_bundles(skus, total):
     assert checkout_solution.checkout(skus) == total
-

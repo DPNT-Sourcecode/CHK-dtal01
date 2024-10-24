@@ -19,6 +19,20 @@ def get_items(skus: str) -> list[str]:
     return list(skus)
 
 
+def extract_bundle(n, size: int) -> tuple[int, int]:
+    """
+    get the number of bundles of :size: and remaining items
+    :param n: number of items
+    :param size: size of the bundle
+    :return: number of bundles and remaining items
+    """
+    bundles, remaining = (
+        n // size,
+        n % size,
+    )
+    return bundles, remaining
+
+
 def get_item_price(items: Counter, item: str) -> int:
     """
     Given an item, return the price of that item
@@ -35,17 +49,16 @@ def get_item_price(items: Counter, item: str) -> int:
         # sort bundles by their size, decreasing
         # i.e. always try to fit largest bundles first
         for bundle_size, bundle in sorted(OFFERS[item].items(), reverse=True):
+            bundles, remaining = extract_bundle(n_items, bundle_size)
+
             if "price" in bundle:
                 bundle_price = bundle["price"]
+            elif "freebie" in bundle:
+                # we get a freebie, hence bundle size
+                # is just the price of all items within
+                bundle_price = bundle_size * regular_price
 
-            # get the price for the current bundle
-            # and update the number of items remaining
-            bundled, n_items = (
-                n_items // bundle_size,
-                n_items % bundle_size,
-            )
-
-            total_price += bundled * bundle_price
+            total_price += bundles * bundle_price
 
     # add the price for the remaining items
     return total_price + n_items * regular_price
@@ -68,9 +81,3 @@ def checkout(skus: str) -> int:
         total += get_item_price(item, count)
 
     return total
-
-
-
-
-
-
