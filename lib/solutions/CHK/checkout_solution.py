@@ -2,6 +2,8 @@
 # skus = unicode string
 from collections import Counter
 
+from loguru import logger
+
 PRICES: dict = {"A": 50, "B": 30, "C": 20, "D": 15, "E": 40}
 OFFERS = {
     "A": {3: {"price": 130}, 5: {"price": 200}},
@@ -44,32 +46,41 @@ def get_item_price(items: Counter, item: str) -> int:
     n_items = items.pop(item)
     total_price = 0
 
+    logger.debug(f"item: {item}, n_items: {n_items}")
+
     # check if item is part of a bundle
-    if item in OFFERS:
-        # sort bundles by their size, decreasing
-        # i.e. always try to fit largest bundles first
-        for bundle_size, bundle in sorted(OFFERS[item].items(), reverse=True):
-            bundles, n_items = extract_bundle(n_items, bundle_size)
+    offers = OFFERS.get(item, {})
 
-            if "price" in bundle:
-                # bundle is for a discount,
-                # hence use the special price
-                bundle_price = bundle["price"]
-            elif "freebie" in bundle:
-                # we get a freebie, hence bundle size
-                # is just the price of all items within
-                bundle_price = bundle_size * regular_price
-                freebie = bundle["freebie"]
+    # sort bundles by their size, decreasing
+    # i.e. always try to fit largest bundles first
+    for bundle_size, bundle in sorted(offers.items(), reverse=True):
+        bundles, n_items = extract_bundle(n_items, bundle_size)
 
-                # we've got some item for free,
-                # so add them to the counter
-                if freebie in items:
-                    get_free = min(items[freebie], bundles)
-                    print(f"got {get_free} {freebie} for free, from {bundles} bundles")
-                    items.update({freebie: -get_free})
+        if "price" in bundle:
+            # bundle is for a discount,
+            # hence use the special price
+            bundle_price = bundle["price"]
+        elif "freebie" in bundle:
+            # we get a freebie, hence bundle size
+            # is just the price of all items within
+            bundle_price = bundle_size * regular_price
+            freebie = bundle["freebie"]
 
-            # add the price for the bundles
-            total_price += bundles * bundle_price
+            # we've got some item for free,
+            # so add them to the counter
+            if freebie in items:
+                get_free = min(items[freebie], bundles)
+                logger.debug(
+                    f"got {get_free} {freebie} for free, from {bundles} bundles"
+                )
+                items.update({freebie: -get_free})
+                logger.debug(f"{freebie} count is now {items[freebie]}")
+
+        # add the price for the bundles
+        total_price += bundles * bundle_price
+        logger.debug(
+            f"got {bundles} bundle(s) of size {bundle_size}, total price {bundles * bundle_price}"
+        )
 
     # add the price for the remaining items
     return total_price + n_items * regular_price
@@ -89,16 +100,11 @@ def checkout(skus: str) -> int:
     while top := counts.most_common(1):
         item, _ = top[0]
 
+        logger.info(f"calculating price for {item}")
         if item not in PRICES:
-            print(f"invalid SKU: {item}")
+            logger.error(f"invalid SKU: {item}")
             return -1
 
         total += get_item_price(counts, item)
 
     return total
-
-
-
-
-
-

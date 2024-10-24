@@ -60,8 +60,3 @@ def test_freebie_counts_order_invariant(skus, total):
     be order-invariant
     """
     assert checkout_solution.checkout(skus) == total
-
-
-
-
-
