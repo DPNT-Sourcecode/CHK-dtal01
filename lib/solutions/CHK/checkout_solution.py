@@ -53,7 +53,7 @@ def checkout(skus: str) -> int:
     print(f"received '{skus}' SKU string from client")
 
     if not skus:
-        return -1
+        return 0
 
     items = get_items(skus)
     counts = Counter(items)
@@ -66,4 +66,5 @@ def checkout(skus: str) -> int:
         total += get_item_price(item, count)
 
     return total
+
 
