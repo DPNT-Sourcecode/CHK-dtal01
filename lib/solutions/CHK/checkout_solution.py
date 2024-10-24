@@ -23,33 +23,34 @@ def get_items(skus: str) -> list[str]:
     return list(skus)
 
 
-def get_item_price(item: str, count: int) -> int:
+def get_bundled(item: str, count: int) -> int:
+    """
+    Given an item, return the price of that item
+    """
+
+
+def get_item_price(item: str, n_items: int) -> int:
     """
     Given an item, return the price of that item
     """
     regular_price = PRICES[item]
-    bundled, remaining = 0, count
-    total = 0
+    total_price = 0
 
     # check if item is part of a bundle
     if item in BUNDLES:
         # sort bundles by their size, decreasing
         # i.e. always try to fit largest bundles first
-        for qty, bundle in sorted(BUNDLES[item].items(), reverse=True):
-            bundle_size = bundle
-            bundle_price = bundle
+        for bundle_size, bundle in sorted(BUNDLES[item].items(), reverse=True):
+            bundle_price = bundle["price"]
 
-        # get the number of bundles that can be made,
-        # and the number of items that are left over
-        bundled, remaining = (
-            count // bundle_size,
-            count % bundle_size,
-        )
+            # get the price for the current bundle
+            # and update the number of items remaining
+            bundled, n_items = (
+                n_items // bundle_size,
+                n_items % bundle_size,
+            )
 
-        total = bundled * bundle_price
-
-    total += remaining * regular_price
-    return total
+            total_price += bundled * bundle_price
 
 
 def checkout(skus: str) -> int:
@@ -69,6 +70,7 @@ def checkout(skus: str) -> int:
         total += get_item_price(item, count)
 
     return total
+
 
 
 
