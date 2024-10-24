@@ -10,11 +10,8 @@ from . import loader
 PRICES, OFFERS = {}, {}
 
 for item in loader.load_items("items.txt"):
-    print(item["price"])
     PRICES.update({item["item"]: item["price"]})
     OFFERS.update({item["item"]: item["offers"]})
-
-logger.info(f"loaded {len(PRICES)} items")
 
 
 def get_items(skus: str) -> list[str]:
@@ -124,12 +121,8 @@ def checkout(skus: str) -> int:
         total += apply_offers(counts, item)
 
     for item in counts:
-        logger.info(f"finding bundles for {item}")
-        logger.info(
-            f"remaining items: {', '.join([f'{k}, {c}' for k,c in counts.items()])}"
-        )
-        logger.debug(f"{counts[item]=}", {PRICES[item]})
         total += counts[item] * PRICES[item]
 
     return total
+
 

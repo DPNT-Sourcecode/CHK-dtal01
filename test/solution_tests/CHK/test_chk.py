@@ -76,6 +76,7 @@ def test_n_plus_freebie_subtracted(skus, total):
     assert checkout_solution.checkout(skus) == total
 
 
-@pytest.mark.parametrize("skus,total", [("H", 10), ("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 20)])
+@pytest.mark.parametrize("skus,total", [("H", 10), ("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 965)])
 def test_loaded(skus, total):
     assert checkout_solution.checkout(skus) == total
+

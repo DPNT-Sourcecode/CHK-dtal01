@@ -47,10 +47,6 @@ def parse_item(line: str) -> dict:
     offers = [o.strip() for o in found.group("offers").split(",")]
     item["offers"] = load_offers(offers, item["price"])
 
-    from pprint import pprint
-
-    pprint(item)
-
     return item
 
 
@@ -59,6 +55,7 @@ def load_items(filepath: str):
         try:
             yield parse_item(line.strip())
         except ValueError as e:
-            logger.debug(f'unable to parse line "{line.strip()}"')
+            # logger.debug(f'unable to parse line "{line.strip()}"')
             continue
+
 
