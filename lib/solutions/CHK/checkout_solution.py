@@ -46,7 +46,7 @@ def get_item_price(items: Counter, item: str) -> int:
     n_items = items.pop(item)
     total_price = 0
 
-    logger.debug(f"item: {item}, n_items: {n_items}")
+    logger.debug(f"item: {item} x {n_items}")
 
     # check if item is part of a bundle
     offers = OFFERS.get(item, {})
@@ -83,11 +83,12 @@ def get_item_price(items: Counter, item: str) -> int:
         )
 
     # add the price for the remaining items
-    return total_price + n_items * regular_price
+    return total_price
 
 
 def checkout(skus: str) -> int:
-    print(f"received '{skus}' SKU string from client")
+    logger.info("-" * 40)
+    logger.info(f"received '{skus}' SKU string from client")
 
     if not skus:
         return 0
@@ -101,6 +102,9 @@ def checkout(skus: str) -> int:
         item, _ = top[0]
 
         logger.info(f"calculating price for {item}")
+        logger.info(
+            f"remaining items: {', '.join([f'{k}, {c}' for k,c in counts.items()])}"
+        )
         if item not in PRICES:
             logger.error(f"invalid SKU: {item}")
             return -1
@@ -108,3 +112,4 @@ def checkout(skus: str) -> int:
         total += get_item_price(counts, item)
 
     return total
+
