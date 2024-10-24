@@ -29,6 +29,7 @@ def get_item_price(item: str, count: int) -> int:
     """
     regular_price = PRICES[item]
     bundled, remaining = 0, count
+    total = 0
 
     # check if item is part of a bundle
     if item in BUNDLES:
@@ -42,11 +43,15 @@ def get_item_price(item: str, count: int) -> int:
             count % bundle_size,
         )
 
-    total = (bundled * bundle_price) + (remaining * regular_price)
+        total = bundled * bundle_price
+
+    total += remaining * regular_price
     return total
 
 
 def checkout(skus: str) -> int:
+    print(f"received {skus}")
+
     if not skus:
         return -1
 
@@ -61,8 +66,3 @@ def checkout(skus: str) -> int:
         total += get_item_price(item, count)
 
     return total
-
-
-
-
-
